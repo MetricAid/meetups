@@ -43,6 +43,12 @@ Well lets start with our requirements:
 
 Ya your reading it right, Go has unicode strings!
 
+* Hello World 2
+
+It goes deeper than just handling unicode and multibye characters, but the language itself supports it:
+
+.play hello2/main.go
+
 * Building a simple Web Application
 
 come on how simple could it be?
@@ -145,4 +151,4 @@ and by running the command *docker* *images* we can see that the image was creat
 
 We've learned why Go is ideal for Web Applications, how easy it is to compile and how to create a docker image.
 
-Now I'll hand it off to Chris Jones to talk about what you can do with that image.
+Now I'll hand it off to Chris Jones to talk about what you can do with that image after some questions.
