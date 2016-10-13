@@ -1,0 +1,94 @@
+Orchestrating and Deploying cloud native apps using Go + Docker
+
+The what + who + where 
+13 Oct 2016
+Tags: web apps, docker, the cloud
+
+Chris Jones
+CTO/CPSO/CISO, MetricAid Inc.
+Chris.Jones@metricaid.com
+http://www.metricaid.com
+@chrisjones77
+
+* What is Docker?
+Docker is a tool for packaging everything (as images) needed to:
+- run a piece of software 
+- in a consistent and portable environment
+Think of it as a way to turn your software into a "cartridge" that you can plug in to any system that can run Docker (Linux, Windows, Mac).
+
+* What is Docker Compose?
+Docker Compose is a tool for specifying a stack of Docker images and how they interconnect.
+
+
+* What is Docker Cloud?
+Docker Cloud is a tool for running and coordinating Docker Compose stacks on in the cloud on your choice of provider.
+http://cloud.docker.com
+
+* Who would want to use Docker?
+Developers & Operations alike!
+
+* Why would I want to use Docker?
+ 1.  Easily try new things
+ 2.  Simplicity & faster configuration
+ 3.  Maintain consistent development and production environments
+ 4.  Increased productivity  
+ 5.  Rapid deployment & Continuous delivery
+
+* What are some problems can Docker help me with?
+ 1.  "I've got this Docker image I built in Go and I'd like to run it on my compouter"
+ 2.  "I'm interested in learning how to use Node.js & Angular, but I don't know how to get started"
+ 3.  "It works on my development machine.  What's different about the server?"
+ 4.  "How many more frontend servers did you say we need?"
+ 5.  "It's going to take me forever to move that change into production!"
+
+* What are the steps?
+Code->Dockerfile->Docker Build->Docker Image->Docker Hub
+1.  use "docker build" to make an image
+2.  use "docker run" to start a new container instance of an image
+
+* Demo 1 Build your own image 
+- docker 
+- docker run myapp -P 8080:8080 --name myapp-1
+
+* Demo 2
+- Angular Drum Machine
+- Node.js backend
+- Angular frontend
+
+git clone https://github.com/m451/docker-drum-machine.git
+cd docker-drum-machine
+docker build -t chrisjones77/drum-machine .
+docker run -d -P 8080:8080 --name drum-machine chrisjones77/drum-machine
+open http://localhost:8080
+
+* Demo 3
+- WordPress stack docker-compose example
+
+* Where can you use Docker?
+- Workstations & Servers (OSX, Windows, Linux)
+
+* How can Docker make life easier for me?
+Docker isn't just useful for making new apps.  By Dockerizing your existing app you can easily transplant it somewhere else in a hurry.
+Use case:  easy transplanting from one server environment to another
+- March 2015: The MetricAid application was hosted on a VMware server at YesUpHost in Toronto.  With less than 48 hours notice we were advised that the entire datacenter was scheduled for a power outage "for just a couple of hours"
+- At the time our application was written in PHP and served up using nginx and wrote to a MySQL database
+- Our users are emergency department physicians who work 24 hours a day.  Downtime of our application is not acceptable.
+- Faced with provisioning an entirely new server but also expecting to have to do this again in the future we took a look at Docker
+- Breaking it down into components we had:
+- Nginx + php-fpm
+- PHP Application code
+- SSL certificate files
+- MySQL Database
+- We built our own custom image with Nginx + php-fpm and got it running on a virtual server at SoftLayer in Toronto.  The only downtime was as a result of DNS propagation delay when changing the entry for app.metricaid.com
+- December 2015: SoftLayer had an unexpected outage that was never explained.  
+- Using the same Docker images we were able to once again move our services to Digital Ocean in Toronto
+
+Use case: multiple concurrent environments using the same image and multiple separate databases
+- Our application is now written in Go and uses MongoDB for storage
+- We need to have three instances on the public internet: app (production), beta, demo, research, training
+- We also have two instances on our office network: sandbox, testing
+- Using Docker Cloud, setting up another internal or external instance is a straightforward process
+
+Demo: running WordPress on a Mac
+Demo: running metricaid/myapp on a Mac
+Demo: running metricaid/myapp on Docker Cloud + Digital Ocean
