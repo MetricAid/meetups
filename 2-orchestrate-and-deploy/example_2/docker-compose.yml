@@ -1,0 +1,4 @@
+service-drum-machine:
+  image: m451/drum-machine
+  ports:
+  - 8081:8080

@@ -1,4 +1,4 @@
-Orchestrating and Deploying cloud native apps using Go + Docker
+Deploying and Orchestrating Cloud Native Apps Using Go + Docker
 
 The what + who + where 
 13 Oct 2016
@@ -10,22 +10,31 @@ Chris.Jones@metricaid.com
 http://www.metricaid.com
 @chrisjones77
 
+* Introduction
+
+- What is Docker?
+- Virtualization vs Containerization
+- Why would I want to use Docker?
+- What are some problems can Docker help me with?
+- Installing Docker Engine
+- Examples
+
 * What is Docker?
-Docker is a tool for packaging everything (as images) needed to:
-- run a piece of software 
-- in a consistent and portable environment
-Think of it as a way to turn your software into a "cartridge" that you can plug in to any system that can run Docker (Linux, Windows, Mac).
+Docker is a containerization tool for packaging everything needed to run your application into a standardized image.
 
-* What is Docker Compose?
-Docker Compose is a tool for specifying a stack of Docker images and how they interconnect.
+Images can be used for both development, distribution & deployment and make it really easy to collaborate.
 
+This all enabled by the consistent and portable Linux environment provided by Docker Engine.
 
-* What is Docker Cloud?
-Docker Cloud is a tool for running and coordinating Docker Compose stacks on in the cloud on your choice of provider.
-http://cloud.docker.com
+Docker Engine is used to run images on supported systems (Mac, Windows, Linux, Raspberry Pi*, and more)
+.image http://www.docker.com/sites/default/files/WhatIsDocker_1_kernal-2_1.png 250 _
 
-* Who would want to use Docker?
-Developers & Operations alike!
+* Virtualization vs Containerization
+Virtualization - multiple copies of an operating system sharing a single computer (real or virtual)
+.image http://www.docker.com/sites/default/files/WhatIsDocker_2_VMs_0-2_2.png _ 250
+
+Containerization - muliple containers sharing an underlying operating system kernel
+.image http://www.docker.com/sites/default/files/WhatIsDocker_3_Containers_2_0.png _ 250
 
 * Why would I want to use Docker?
  1.  Easily try new things
@@ -34,61 +43,61 @@ Developers & Operations alike!
  4.  Increased productivity  
  5.  Rapid deployment & Continuous delivery
 
-* What are some problems can Docker help me with?
- 1.  "I've got this Docker image I built in Go and I'd like to run it on my compouter"
- 2.  "I'm interested in learning how to use Node.js & Angular, but I don't know how to get started"
- 3.  "It works on my development machine.  What's different about the server?"
- 4.  "How many more frontend servers did you say we need?"
- 5.  "It's going to take me forever to move that change into production!"
+* What are some problems that Docker can help me with?
 
-* What are the steps?
-Code->Dockerfile->Docker Build->Docker Image->Docker Hub
-1.  use "docker build" to make an image
-2.  use "docker run" to start a new container instance of an image
+Docker isn't just useful for making new apps.  By Dockerizing your existing app you can easily transplant it somewhere else in a hurry.
 
-* Demo 1 Build your own image 
-- docker 
-- docker run myapp -P 8080:8080 --name myapp-1
+We have moved our app.metricaid.com from YesUpHost to SoftLayer to DigitalOcean with minimal disruption.
 
-* Demo 2
-- Angular Drum Machine
-- Node.js backend
-- Angular frontend
+ 1.  "I've got this Docker image I built in Go and I'd like to run it on my computer"
+ 2.  "I'd like to see an example of an application written with Node.js & Angular, but I don't know how to get started"
+ 3.  "I'd like to learn to use WordPress, but the steps to install it seem complicated"
 
-git clone https://github.com/m451/docker-drum-machine.git
-cd docker-drum-machine
-docker build -t chrisjones77/drum-machine .
-docker run -d -P 8080:8080 --name drum-machine chrisjones77/drum-machine
+* Installing Docker Engine
+The Docker Engine is available for Mac & Windows at docker.com
+.link http://www.docker.com/products/overview Docker.com Downloads
+
+* Example 1 Running the "better-example" image 
+Folder: /2-orchestrate-and-deploy/example_1
+> cd 1-build-and-deliver-even-better
+- picking up from the step where we built the Docker image "even-better"
+docker run -d -P 8080:8080 --name service-even-better even-better
 open http://localhost:8080
 
-* Demo 3
-- WordPress stack docker-compose example
+* Example 2 - Angular Drum Machine
+Folder: /2-orchestrate-and-deploy/example_2
+- A simple Drum Machine using a Node.js backend and an Angular frontend
+docker run -d -P 8081:8080 --name service-drum-machine m451/drum-machine
+open http://localhost:8081
 
-* Where can you use Docker?
-- Workstations & Servers (OSX, Windows, Linux)
+* Example 3 - WordPress with Docker Compose
 
-* How can Docker make life easier for me?
-Docker isn't just useful for making new apps.  By Dockerizing your existing app you can easily transplant it somewhere else in a hurry.
-Use case:  easy transplanting from one server environment to another
-- March 2015: The MetricAid application was hosted on a VMware server at YesUpHost in Toronto.  With less than 48 hours notice we were advised that the entire datacenter was scheduled for a power outage "for just a couple of hours"
-- At the time our application was written in PHP and served up using nginx and wrote to a MySQL database
-- Our users are emergency department physicians who work 24 hours a day.  Downtime of our application is not acceptable.
-- Faced with provisioning an entirely new server but also expecting to have to do this again in the future we took a look at Docker
-- Breaking it down into components we had:
-- Nginx + php-fpm
-- PHP Application code
-- SSL certificate files
-- MySQL Database
-- We built our own custom image with Nginx + php-fpm and got it running on a virtual server at SoftLayer in Toronto.  The only downtime was as a result of DNS propagation delay when changing the entry for app.metricaid.com
-- December 2015: SoftLayer had an unexpected outage that was never explained.  
-- Using the same Docker images we were able to once again move our services to Digital Ocean in Toronto
+Folder: /2-orchestrate-and-deploy/example_3
+- docker-compose up -d
 
-Use case: multiple concurrent environments using the same image and multiple separate databases
-- Our application is now written in Go and uses MongoDB for storage
-- We need to have three instances on the public internet: app (production), beta, demo, research, training
-- We also have two instances on our office network: sandbox, testing
-- Using Docker Cloud, setting up another internal or external instance is a straightforward process
+* Example 4 - Push "better-example" to Docker Hub and run it somewhere else
+Do run this example you need to create a Docker Hub account
+.link http://hub.docker.com Docker Hub
 
-Demo: running WordPress on a Mac
-Demo: running metricaid/myapp on a Mac
-Demo: running metricaid/myapp on Docker Cloud + Digital Ocean
+Folder: /1-build-and-deliver/even-better
+docker build -t <Docker Hub user name>/even-better
+docker login (supply your Docker Hub credentials)
+docker push <Docker Hub user name>/even-better
+on another machine with Docker Engine:
+docker run -d -p 8085:8080 metricaidops/even-better
+
+* Example 5 - Use Docker Cloud to run "better-example" on a Digital Ocean server in New York
+
+* Summary
+- Docker Engine makes it easy to package up your software into images and run them anywhere
+- Docker Hub makes it easy to store your Docker images in a repository
+- Docker Compose makes it easy to define services using multiple images
+- Docker Cloud makes it easy to run your services in the cloud 
+
+* Additional resources
+.link http://training.docker.com Docker Training
+.link http://hub.docker.com Docker Hub
+.link http://cloud.docker.com Docker Cloud
+.link http://www.digitalocean.com Digital Ocean
+.link http://blog.hypriot.com/ Hypriot - Docker for ARM (such as Raspberry PI)
+.link https://github.com/MetricAid/meetups GitHub repository with this presentation and all examples.

@@ -1,0 +1,7 @@
+present:
+  image: mkboudreau/go-present
+  volumes: 
+  - ./:/app
+  ports:
+  - 3999:3999
+
