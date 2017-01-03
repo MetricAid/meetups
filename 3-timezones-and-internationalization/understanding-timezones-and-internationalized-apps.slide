@@ -1,0 +1,54 @@
+Timezones, i18n, l10n & Internationalization
+
+Dealing with & Building for
+13 Oct 2016
+Tags: timezones, i18n, l10n, internationalization
+
+Dean Karn
+COO development, MetricAid Inc.
+Dean.Karn@metricaid.com
+http://www.metricaid.com
+@dean_karn
+
+* Time & Humans
+
+So why is time such a big deal and why is it so complicated? Well it's a problem of our own making
+
+- Speed of travel, we can travel faster than the earth rotates.
+- Being so obsessed with time...and money
+- Complicated by daylight savings time! what! time can jump forward or backward? oh that doesn't complicate things at all...
+- How humans refer to and consume time, is not how we store it.
+
+* Example 1
+
+We say the Monday shift is from 4 to midnight; simple enough right.
+
+In reality though it's a bit different as midnight is really the start of Tuesday; I know it seems like a trivial distinction, until you start querying and aggregating data from the database.
+
+In reality we'd probably store it as the smallest unit, nanoseconds, before midnight.
+
+	// example int UTC with ms precision
+
+	4        - 2016-01-01 16:00:00.000000000 +0000 UTC
+	midnight - 2016-01-01 23:59:59.999999999 +0000 UTC
+
+So the way we talk about time isn't how we store it in this example
+
+* Example 2
+
+We say that your work schedule is from January 1st to the 31st, again simple enough right, everyone understands that.
+
+We understand to the 31st includes the entire day of the 31st, but that's not how we'd store it...
+
+We would store the 1st as midnight of that day and the 31st as the smallest unit, nanoseconds, before midnight of the next day to properly include all of the time in the date range; again it seems trivial untill querying and aggregating data.
+
+	// example int UTC with ms precision
+
+	1st  - 2016-01-01 16:00:00.000000000 +0000 UTC
+	31st - 2016-01-31 23:59:59.999999999 +0000 UTC
+
+* Time & Humans Summary
+
+So as you can see with just a couple of *simple* examples that humans talk about and consume time information differently than it is stored.
+
+There are I'm sure many more complex scenarios, but most of them tend to stem from the same issues as the following two examples demonstrated.
