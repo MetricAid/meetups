@@ -83,6 +83,31 @@ So now the record shows that the patient went home before arriving at the hospit
 
 Daylight Savings Time sucks!
 
+* Example 3
+
+it's amazing how easily it can be catastrophic and how many time major service have gone down because of this; take the following example:
+
+		before := time.Now()
+
+		// a loop where an event is being waited for, in this case using time.Sleep
+		for {
+			time.Sleep(time.Second * 1)
+
+			var event *Event // nil by default
+
+			after := time.Now()
+			diff := after.Sub(before)
+
+			if diff > time.Minute*30 {
+				event = &Event{slow: true}
+			} else if diff > time.Minute*5 {
+				event = &Event{slow: false}
+			}
+
+			fmt.Println(event.slow)
+			before = after
+		}
+
 * How To Gain Control
 
 So how do we deal with Daylight Savings Time? Well there are a couple ways I'm aware of:
@@ -110,8 +135,51 @@ Most, if not all, programming languages assume you want Time in the local system
 
 So to avoid our problem of Daylight Savings Time, the System Time must be set to UTC to avoid the time ever being in a Timezone that has Daylight Savings Time and the potential time jump; if you don't do this, look out there be dragons!
 
+* Example 3 Cont'd
+
+Proof that time difference can be negative.
+
+	package main
+
+	import (
+		"fmt"
+		"time"
+	)
+
+	func main() {
+
+		before := time.Date(2016, 03, 13, 1, 59, 59, 0, time.Local)
+		after := time.Date(2016, 03, 13, 2, 0, 0, 0, time.Local)
+
+		// diff since last event
+		diff := after.Sub(before)
+
+		fmt.Printf("Before:%s\n", before)
+		fmt.Printf("After:%s\n", after)
+		fmt.Printf("Diff:%s\n", diff)
+	}
+
+.link [[https://play.golang.org/p/k4cUbjJgUe]] Proof setting System Time to UTC Fixes this
+
 * Before continuing
 
-OK now so it I've been talking like you should always store your time in UTC, I think you should, however it's not always necessary either; it depends on the complexity of your application.
+OK now so it I've been talking like you should always store your time in UTC, however allot of people may argue it depends on the complexity of your application; if you have a simple program that will only be used from one Timezone then what does it matter? ... Big Data
 
+Let's say you have some Apparel Software and 1000 clients using the software that seel t-shirts. So each client doesn't care about the other, but what they might be interested in knowing the trends of the industry such as what color shirts are selling the most, and which are on the rise so they can keep them in stock and sell more.
 
+might find out the black t-shirts are the biggest seller, but orange t-shirt sales are on the rise because orange is the new black ;)
+
+If you store time as UTC in the backend for all you clients, it's easy to aggregate the data accross Timezones around the world.
+
+Moreover, now your company can build and get extra revenue from a new forcasting module you can easily build.
+
+* Additional
+
+Sometime it may also be good to do/store the following; but it's really on an application by application basis.
+
+- Store originating Timezone Info (for easy or automated conversion logic later)
+- Store timestamp as int64 in nanoseconds (not all languages Time object handles nanosecond precision)
+- Really think about how time will be used within your application before moving forward!
+- Don't worry if you're having a hard time grasping time, or second guessing yourself even when you though you already understood it; even those very familiar with time second guess themselves. I think I second guessed myself and had to re-prove a bunch of stuff to myself about a dozen times while writting this.
+
+Best advice is to write a proof-of-concept to prove it to youself or your team.
