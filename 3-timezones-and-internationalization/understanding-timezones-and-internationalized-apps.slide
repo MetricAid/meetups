@@ -159,7 +159,7 @@ Proof that time difference can be negative.
 		fmt.Printf("Diff:%s\n", diff)
 	}
 
-.link [[https://play.golang.org/p/k4cUbjJgUe]] Proof setting System Time to UTC Fixes this
+.link https://play.golang.org/p/k4cUbjJgUe Proof setting System Time to UTC Fixes this
 
 * Before continuing
 
@@ -183,3 +183,94 @@ Sometime it may also be good to do/store the following; but it's really on an ap
 - Don't worry if you're having a hard time grasping time, or second guessing yourself even when you though you already understood it; even those very familiar with time second guess themselves. I think I second guessed myself and had to re-prove a bunch of stuff to myself about a dozen times while writting this.
 
 Best advice is to write a proof-of-concept to prove it to youself or your team.
+
+* Break Time
+
+Time for a break!
+
+* l10n, i18n & Internationalization
+
+So what are/is l10n, i18n & Internationalization
+
+l10n aka Localization - refers to the adaptation of a product, application or document content to meet the language, cultural and other requirements of a specific target market (a locale); this includes Number, Date, Time and Currency formating, collation and so forth
+
+i18n aka Internationalization - is the design and development of a product, application or document content that enables easy localization for target audiences that vary in culture, region, or language.
+
+So in lamens terms l10n is the locale information and rules and i18n is the infrastructure put in place to be able to transparently use and switch between locales.
+
+* Information
+
+There are l10n and i18n libraries/modules/plugins for almost all languages and unless there isn't one or one with correct informatin or rules I'd recommend not creating one of your own... unless you like pain... ten by all means.
+
+So where's the information and rules come from? It used to be that it came from peoples heads and a great number of disparate specs until
+.link http://cldr.unicode.org/index Unicode CLDR Project
+
+The CLDR project contains the information to create an l10n library with Formatting, Plural Rules and Collation information.
+
+* How to implement i18n
+
+Well generally there are two ways:
+
+1. Have a separate UI/UX layer with hardcoded translated text within it. eg. in a website a separate html page per locale.
+
+2. Have the translations completely dynamic (recommended) eg. a single html template that renders the translations passed into it.
+
+Why is #2 recommended? because your going to have to do do some dynamic translations because of the Plural Rules... but we'll get to that in future slides.
+
+* Example 1
+
+	en.html
+
+	<html>
+	<head></head>
+	<body>
+		Hello World
+	</body>
+	</html> 
+
+	fr.html
+
+	<html>
+	<head></head>
+	<body>
+		Bonjour le monde
+	</body>
+	</html>
+
+It seems like a great idea until you your website gets a large number of pages then changes or upgrades become a maintenance nightmare!
+
+* Example 2
+
+	{{ .Greeting }} - is information passed into hello.html for parsing
+
+	hello.html
+
+	<html>
+	<head></head>
+	<body>
+		{{ .Greeting }}
+	</body>
+	</html>
+
+The bigger your application gets, your not incurring more maintenance.
+
+* Plural Rules
+
+These cause translations to be dynamic; here's an example:
+
+There is 1 day left in your subscription
+vs
+There is 2 days left in your subscription
+
+So depending on the the dynamic day value the actual translation is different "day" vs "days"; and that's just for English there are actually more rules for different languages including:
+
+- One
+- Two
+- Few
+- Many
+- Other
+.link http://www.unicode.org/cldr/charts/29/supplemental/language_plural_rules.html Plural Rules
+
+* Example Application
+
+Let's take a look at an example application to see how easly it is once all the boilerplate code is created.
