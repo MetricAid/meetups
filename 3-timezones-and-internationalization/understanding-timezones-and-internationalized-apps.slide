@@ -274,3 +274,5 @@ So depending on the the dynamic day value the actual translation is different "d
 * Example Application
 
 Let's take a look at an example application to see how easly it is once all the boilerplate code is created.
+
+.link https://github.com/MetricAid/meetups/tree/master/3-timezones-and-internationalization/i18n-app Web App
